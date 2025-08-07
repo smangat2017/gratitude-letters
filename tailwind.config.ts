@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       fontFamily: {
         'sans': ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        'serif': ['var(--font-playfair)', 'Georgia', 'serif'],
-        'display': ['var(--font-playfair)', 'Georgia', 'serif'],
+        'serif': ['var(--font-lora)', 'Georgia', 'serif'],
+        'display': ['var(--font-lora)', 'Georgia', 'serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
