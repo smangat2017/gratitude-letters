@@ -38,14 +38,14 @@ ${senderName.trim() || '[Your name]'}`
     } else if (recipientName.trim() || senderName.trim()) {
       setPreviewContent(`For ${recipientName.trim() || '[Recipient\'s name]'},
 
-[Start writing what you love about this person...]
+[Start writing what you appreciate about this person...]
 
 With love and gratitude,
 ${senderName.trim() || '[Your name]'}`)
     } else {
       setPreviewContent(`For [Recipient's name],
 
-[Add the person's name and what you love about them...]
+[Add the person's name and what you appreciate about them...]
 
 With love and gratitude,
 ${senderName.trim() || '[Your name]'}`)
@@ -282,12 +282,12 @@ ${senderName.trim() || '[Your name]'}`)
               {/* Bullet Points */}
               <div className="mb-8">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  What do you love about this person?
+                  What do you appreciate about this person?
                 </label>
                 <textarea
                   value={bulletPoints}
                   onChange={(e) => setBulletPoints(e.target.value)}
-                  placeholder="I love the way..."
+                  placeholder="I appreciate the way..."
                   rows={8}
                   className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/50 backdrop-blur-sm resize-none transition-all duration-200"
                 />
