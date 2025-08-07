@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     description: 'Transform your love into beautiful poetry. Share your heart with those who matter most.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1597605953084-526402cea0ab?q=80&w=967&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        width: 967,
-        height: 644,
+        url: 'https://images.unsplash.com/photo-1530686350401-7de25243dd89?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        width: 2342,
+        height: 1561,
         alt: 'Beautiful gratitude poem with warm colors and flowers',
       },
     ],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Gratitude Letters',
     description: 'Transform your love into beautiful poetry. Share your heart with those who matter most.',
-    images: ['https://images.unsplash.com/photo-1597605953084-526402cea0ab?q=80&w=967&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+    images: ['https://images.unsplash.com/photo-1530686350401-7de25243dd89?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
   },
 }
 
