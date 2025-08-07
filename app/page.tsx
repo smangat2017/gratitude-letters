@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Flower2, Leaf, Heart, Download, Edit3, Save, X } from 'lucide-react'
+import { Flower2, Leaf, Heart, Download, Edit3, Save, X, RefreshCw, MessageSquare } from 'lucide-react'
 
 export default function Home() {
   const [recipientName, setRecipientName] = useState('')
@@ -14,6 +14,9 @@ export default function Home() {
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState('')
   const [previewContent, setPreviewContent] = useState('')
+  const [feedback, setFeedback] = useState('')
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [isRevising, setIsRevising] = useState(false)
 
   // Real-time preview generation
   const generatePreview = useCallback(() => {
@@ -74,10 +77,42 @@ ${senderName.trim() || '[Your name]'}`)
       setPoemContent(data.poem)
       setShowPoem(true)
       setIsEditing(false)
+      setShowFeedback(false)
+      setFeedback('')
     } catch (error) {
       console.error('Error generating poem:', error)
     } finally {
       setIsGenerating(false)
+    }
+  }
+
+  const revisePoem = async () => {
+    if (!feedback.trim()) return
+
+    setIsRevising(true)
+    try {
+      const response = await fetch('/api/revise-poem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          recipientName, 
+          senderName, 
+          bulletPoints, 
+          currentPoem: poemContent,
+          feedback 
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to revise poem')
+
+      const data = await response.json()
+      setPoemContent(data.poem)
+      setShowFeedback(false)
+      setFeedback('')
+    } catch (error) {
+      console.error('Error revising poem:', error)
+    } finally {
+      setIsRevising(false)
     }
   }
 
@@ -285,24 +320,42 @@ ${senderName.trim() || '[Your name]'}`)
               <div className="relative">
                 {/* Action Buttons - Top Right */}
                 <div className="absolute top-4 right-4 z-20 flex space-x-2">
-                  {!isEditing && (
-                    <button
-                      onClick={downloadPDF}
-                      disabled={isDownloading}
-                      className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2 px-3 rounded-lg font-medium hover:from-emerald-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
-                    >
-                      {isDownloading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
-                          Creating...
-                        </>
-                      ) : (
-                        <>
-                          <Download className="h-3 w-3 mr-1" />
-                          Save PDF
-                        </>
-                      )}
-                    </button>
+                  {!isEditing && !showFeedback && (
+                    <>
+                      <button
+                        onClick={downloadPDF}
+                        disabled={isDownloading}
+                        className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2 px-3 rounded-lg font-medium hover:from-emerald-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
+                      >
+                        {isDownloading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
+                            Creating...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="h-3 w-3 mr-1" />
+                            Save PDF
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => setShowFeedback(true)}
+                        className="bg-gradient-to-r from-orange-500 to-amber-500 text-white py-2 px-3 rounded-lg font-medium hover:from-orange-600 hover:to-amber-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
+                      >
+                        <MessageSquare className="h-3 w-3 mr-1" />
+                        Revise
+                      </button>
+
+                      <button
+                        onClick={handleEdit}
+                        className="bg-gradient-to-r from-purple-500 to-violet-500 text-white py-2 px-3 rounded-lg font-medium hover:from-purple-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
+                      >
+                        <Edit3 className="h-3 w-3 mr-1" />
+                        Edit
+                      </button>
+                    </>
                   )}
 
                   {isEditing ? (
@@ -322,16 +375,55 @@ ${senderName.trim() || '[Your name]'}`)
                         Cancel
                       </button>
                     </div>
-                  ) : (
-                    <button
-                      onClick={handleEdit}
-                      className="bg-gradient-to-r from-purple-500 to-violet-500 text-white py-2 px-3 rounded-lg font-medium hover:from-purple-600 hover:to-violet-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
-                    >
-                      <Edit3 className="h-3 w-3 mr-1" />
-                      Edit
-                    </button>
-                  )}
+                  ) : showFeedback ? (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={revisePoem}
+                        disabled={!feedback.trim() || isRevising}
+                        className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
+                      >
+                        {isRevising ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
+                            Revising...
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="h-3 w-3 mr-1" />
+                            Revise
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowFeedback(false)
+                          setFeedback('')
+                        }}
+                        className="bg-gradient-to-r from-gray-500 to-slate-500 text-white py-2 px-3 rounded-lg font-medium hover:from-gray-600 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center text-sm"
+                      >
+                        <X className="h-3 w-3 mr-1" />
+                        Cancel
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
+
+                {/* Feedback Input */}
+                {showFeedback && (
+                  <div className="absolute top-16 right-4 z-20 w-80 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-xl border border-pink-200">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-2">How would you like to revise this poem?</h3>
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Make it more romantic... Make it shorter... Add more specific details... Change the tone to..."
+                      rows={4}
+                      className="w-full px-3 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/50 backdrop-blur-sm resize-none transition-all duration-200 text-sm"
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      Be specific about what you'd like to change. The AI will incorporate your feedback.
+                    </p>
+                  </div>
+                )}
 
                 {isEditing ? (
                   <textarea
