@@ -31,13 +31,6 @@ class Analytics {
   }
 
   private async sendEvent(event: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'poemId'>): Promise<void> {
-    const analyticsEvent: AnalyticsEvent = {
-      ...event,
-      timestamp: new Date().toISOString(),
-      sessionId: this.sessionId,
-      poemId: this.poemId,
-    };
-
     try {
       // Track with Vercel Analytics
       track(event.event, {
@@ -48,13 +41,10 @@ class Analytics {
         poemId: this.poemId,
       });
 
-      // Also send to our custom endpoint for additional processing
-      await fetch('/api/analytics', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(analyticsEvent),
+      console.log('Vercel Analytics event tracked:', event.event, {
+        recipientName: event.recipientName || 'anonymous',
+        senderName: event.senderName || 'anonymous',
+        editCount: event.editCount || 0,
       });
     } catch (error) {
       console.error('Analytics error:', error);
@@ -63,6 +53,7 @@ class Analytics {
   }
 
   trackPoemGenerated(recipientName?: string, senderName?: string): void {
+    console.log('🎯 Tracking poem generation:', { recipientName, senderName });
     this.sendEvent({
       event: 'poem_generated',
       recipientName,
@@ -72,6 +63,7 @@ class Analytics {
 
   trackPoemEdited(recipientName?: string, senderName?: string): void {
     this.editCount++;
+    console.log('🎯 Tracking poem edit:', { recipientName, senderName, editCount: this.editCount });
     this.sendEvent({
       event: 'poem_edited',
       recipientName,
@@ -81,6 +73,7 @@ class Analytics {
   }
 
   trackPoemSaved(recipientName?: string, senderName?: string): void {
+    console.log('🎯 Tracking poem save:', { recipientName, senderName, editCount: this.editCount });
     this.sendEvent({
       event: 'poem_saved',
       recipientName,

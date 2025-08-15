@@ -40,8 +40,8 @@ A beautiful, heartfelt web application for creating gratitude letters using Clau
 - **Event Tracking**: Monitor poem generation, edits, and saves
 - **User Behavior**: Track engagement patterns and user journeys
 - **Performance Metrics**: Measure conversion rates and user satisfaction
-- **Real-time Dashboard**: Beautiful analytics interface at `/analytics`
-- **Privacy-First**: Client-side tracking with optional server-side storage
+- **Vercel Analytics**: Real-time analytics in your Vercel dashboard
+- **Privacy-First**: GDPR compliant analytics tracking
 
 ## 🛠️ Tech Stack
 
@@ -85,12 +85,11 @@ npm run dev
 
 ### Analytics Setup
 
-The app includes comprehensive analytics tracking with Vercel Analytics:
+The app includes analytics tracking with Vercel Analytics:
 
 1. **Vercel Analytics**: Automatically tracks page views and custom events
 2. **Custom Events**: Tracks poem generation, edits, and saves
-3. **Dashboard**: Visit `/analytics` to see the analytics dashboard
-4. **Real-time Data**: View live analytics in your Vercel dashboard
+3. **Real-time Data**: View live analytics in your Vercel dashboard
 
 **Analytics Events Tracked:**
 - `poem_generated`: When a new poem is created
@@ -99,13 +98,9 @@ The app includes comprehensive analytics tracking with Vercel Analytics:
 
 **To view analytics:**
 - **Vercel Dashboard**: Visit your Vercel project dashboard for real-time analytics
-- **Local Dashboard**: Visit `/analytics` in your app for a custom dashboard
-- **API Endpoint**: `/api/analytics/dashboard` for programmatic access
+- **Events**: Custom events will appear in the Events section of your Vercel dashboard
 
-**To extend analytics:**
-- Edit `/app/api/analytics/route.ts` to add custom processing
-- Connect to databases or other analytics services
-- See `/lib/analytics-db.ts` for integration examples
+**Note**: Custom events may take a few minutes to appear in your Vercel dashboard. Make sure your app is deployed to Vercel for analytics to work.
 
 ## 📁 Project Structure
 
@@ -113,26 +108,17 @@ The app includes comprehensive analytics tracking with Vercel Analytics:
 gratitude-letters/
 ├── app/
 │   ├── api/
-│   │   ├── analytics/
-│   │   │   ├── route.ts          # Analytics tracking endpoint
-│   │   │   └── dashboard/
-│   │   │       └── route.ts      # Dashboard data endpoint
 │   │   ├── generate-poem/
 │   │   │   └── route.ts          # Claude AI poem generation
 │   │   ├── revise-poem/
 │   │   │   └── route.ts          # Poem revision endpoint
 │   │   └── generate-pdf/
 │   │       └── route.ts          # PDF generation
-│   ├── analytics/
-│   │   └── page.tsx              # Analytics dashboard
-│   ├── components/
-│   │   └── Navigation.tsx        # Navigation component
 │   ├── globals.css               # Global styles
 │   ├── layout.tsx                # Root layout
 │   └── page.tsx                  # Main gratitude letter composer
 ├── lib/
-│   ├── analytics.ts              # Analytics utility functions
-│   └── analytics-db.ts           # Database integration examples
+│   └── analytics.ts              # Analytics utility functions
 ├── .env.local                    # Environment variables
 ├── package.json
 └── README.md
