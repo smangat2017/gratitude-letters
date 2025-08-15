@@ -11,6 +11,7 @@ A beautiful, heartfelt web application for creating gratitude letters using Clau
 - **👁️ Live Preview**: See your letter as it's being generated
 - **📱 Responsive Design**: Works perfectly on all devices
 - **⚡ Fast & Simple**: One-page experience with no complex navigation
+- **📊 Analytics Tracking**: Monitor poem generation, edits, and saves with detailed analytics
 
 ## 🚀 Key Features
 
@@ -34,6 +35,13 @@ A beautiful, heartfelt web application for creating gratitude letters using Clau
 - **Custom Filenames**: PDFs named after the recipient
 - **Print-Ready**: Perfect for sharing or printing
 - **Professional Layout**: Header, content, and footer sections
+
+### Analytics & Insights
+- **Event Tracking**: Monitor poem generation, edits, and saves
+- **User Behavior**: Track engagement patterns and user journeys
+- **Performance Metrics**: Measure conversion rates and user satisfaction
+- **Real-time Dashboard**: Beautiful analytics interface at `/analytics`
+- **Privacy-First**: Client-side tracking with optional server-side storage
 
 ## 🛠️ Tech Stack
 
@@ -75,19 +83,56 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Analytics Setup
+
+The app includes comprehensive analytics tracking with Vercel Analytics:
+
+1. **Vercel Analytics**: Automatically tracks page views and custom events
+2. **Custom Events**: Tracks poem generation, edits, and saves
+3. **Dashboard**: Visit `/analytics` to see the analytics dashboard
+4. **Real-time Data**: View live analytics in your Vercel dashboard
+
+**Analytics Events Tracked:**
+- `poem_generated`: When a new poem is created
+- `poem_edited`: When a poem is revised or manually edited
+- `poem_saved`: When a poem is downloaded as PDF
+
+**To view analytics:**
+- **Vercel Dashboard**: Visit your Vercel project dashboard for real-time analytics
+- **Local Dashboard**: Visit `/analytics` in your app for a custom dashboard
+- **API Endpoint**: `/api/analytics/dashboard` for programmatic access
+
+**To extend analytics:**
+- Edit `/app/api/analytics/route.ts` to add custom processing
+- Connect to databases or other analytics services
+- See `/lib/analytics-db.ts` for integration examples
+
 ## 📁 Project Structure
 
 ```
 gratitude-letters/
 ├── app/
 │   ├── api/
-│   │   ├── generate-letter/
-│   │   │   └── route.ts          # Claude AI letter generation
+│   │   ├── analytics/
+│   │   │   ├── route.ts          # Analytics tracking endpoint
+│   │   │   └── dashboard/
+│   │   │       └── route.ts      # Dashboard data endpoint
+│   │   ├── generate-poem/
+│   │   │   └── route.ts          # Claude AI poem generation
+│   │   ├── revise-poem/
+│   │   │   └── route.ts          # Poem revision endpoint
 │   │   └── generate-pdf/
 │   │       └── route.ts          # PDF generation
+│   ├── analytics/
+│   │   └── page.tsx              # Analytics dashboard
+│   ├── components/
+│   │   └── Navigation.tsx        # Navigation component
 │   ├── globals.css               # Global styles
 │   ├── layout.tsx                # Root layout
 │   └── page.tsx                  # Main gratitude letter composer
+├── lib/
+│   ├── analytics.ts              # Analytics utility functions
+│   └── analytics-db.ts           # Database integration examples
 ├── .env.local                    # Environment variables
 ├── package.json
 └── README.md

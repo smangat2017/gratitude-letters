@@ -102,6 +102,25 @@ Thank you!`
     const data = await response.json()
     const poem = data.content[0].text
 
+    // Track poem revision analytics
+    try {
+      await fetch(`${request.nextUrl.origin}/api/analytics`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'poem_edited',
+          recipientName,
+          senderName,
+          timestamp: new Date().toISOString(),
+          sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          poemId: `poem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        }),
+      })
+    } catch (error) {
+      console.error('Analytics tracking error:', error)
+      // Don't fail the request if analytics fails
+    }
+
     return NextResponse.json({ poem })
   } catch (error) {
     console.error('Error revising poem:', error)

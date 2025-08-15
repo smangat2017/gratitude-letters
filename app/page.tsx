@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Flower2, Leaf, Heart, Download, Edit3, Save, X, RefreshCw, MessageSquare } from 'lucide-react'
+import { Flower2, Leaf, Heart, Download, Edit3, Save, X, RefreshCw, MessageSquare, BarChart3 } from 'lucide-react'
+import { analytics } from '@/lib/analytics'
 
 export default function Home() {
   const [recipientName, setRecipientName] = useState('')
@@ -79,6 +80,9 @@ ${senderName.trim() || '[Your name]'}`)
       setIsEditing(false)
       setShowFeedback(false)
       setFeedback('')
+      
+      // Track poem generation on frontend
+      analytics.trackPoemGenerated(recipientName, senderName)
     } catch (error) {
       console.error('Error generating poem:', error)
     } finally {
@@ -109,6 +113,9 @@ ${senderName.trim() || '[Your name]'}`)
       setPoemContent(data.poem)
       setShowFeedback(false)
       setFeedback('')
+      
+      // Track poem revision on frontend
+      analytics.trackPoemEdited(recipientName, senderName)
     } catch (error) {
       console.error('Error revising poem:', error)
     } finally {
@@ -138,6 +145,9 @@ ${senderName.trim() || '[Your name]'}`)
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
+      
+      // Track poem save on frontend
+      analytics.trackPoemSaved(recipientName, senderName)
     } catch (error) {
       console.error('Error downloading PDF:', error)
     } finally {
@@ -153,6 +163,9 @@ ${senderName.trim() || '[Your name]'}`)
   const handleSave = () => {
     setPoemContent(editedContent)
     setIsEditing(false)
+    
+    // Track manual poem edit save
+    analytics.trackPoemEdited(recipientName, senderName)
   }
 
   const handleCancel = () => {
@@ -229,7 +242,7 @@ ${senderName.trim() || '[Your name]'}`)
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative">
           <div className="flex items-center justify-center mb-4">
             <Flower2 className="h-8 w-8 text-pink-400 mr-3" />
             <h1 className="text-4xl font-display font-bold bg-gradient-to-r from-pink-600 via-rose-600 to-red-600 bg-clip-text text-transparent">
@@ -240,6 +253,8 @@ ${senderName.trim() || '[Your name]'}`)
           <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
             Share your heart with those who matter most.
           </p>
+          
+
         </div>
 
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
